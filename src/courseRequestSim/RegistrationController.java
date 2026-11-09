@@ -45,12 +45,13 @@ public class RegistrationController
             
             // Loop for the current user thats logged in (Choosing D resets
             // this by making currentUser null
-            while (currentUser != null) 
+            while (currentUser != null && systemRunning) 
             {
                 view.showMainMenu(currentUser.getName()); 
                 String choice = getValidString("Select an option: ").toUpperCase();
                 processMenuOptions(choice); 
             }
+            view.displayMessage("Exiting the Registration System. Goodbye!");
         }
     }
     
@@ -59,7 +60,14 @@ public class RegistrationController
      */
     public void handleLogin() 
     {
-        String name = getValidString("Enter your name: ");
+        String name = getValidString("Enter your name (or type 'exit' to quit: ");
+        
+        if (name.equalsIgnoreCase("exit"))
+        {
+            systemRunning = false;
+            return;
+        }
+        
         
         int id = 0;
         while (id < 10000 || id > 99999) //Invalid ID just keeps asking input
