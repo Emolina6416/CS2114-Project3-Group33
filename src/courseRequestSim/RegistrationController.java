@@ -47,7 +47,7 @@ public class RegistrationController
             // this by making currentUser null
             while (currentUser != null) 
             {
-                view.showMainMenu(); 
+                view.showMainMenu(currentUser.getName()); 
                 String choice = getValidString("Select an option: ").toUpperCase();
                 processMenuOptions(choice); 
             }
@@ -99,79 +99,91 @@ public class RegistrationController
                 view.displayMessage("--- Available Courses for Year " 
                     + currentUser.getClassYear() + " ---");
                 
-                List<Course> availableCourses = 
-                        catalog.getCoursesByYear(currentUser.getClassYear());
+                List<Course> availableCourses = catalog.getCoursesByYear(currentUser.getClassYear());
                 
-                // Checks for an empty list first (shouldnt have to worry about 
-                // this though, I think since we'll have classes for all years
-                // but just in case, if this does pop up its a problem)
+                //shouldnt be empty since all years will have courses but...
+                //just in case?
                 if (availableCourses.isEmpty()) {
                     view.displayMessage("No courses currently available for your year.");
                     break;
                 }
-
-                // Numbered list of classes so that a user picks from 1 to
-                // however many classes 
+                
+                //Courses printed 
                 for (int i = 0; i < availableCourses.size(); i++) 
                 {
-                    // i + 1 makes the list print as 1, 2, 3 instead of 0, 1, 2
                     view.displayMessage((i + 1) + ". " + 
-                    availableCourses.get(i).getCourseName());
+                        availableCourses.get(i).getCourseName());
                 }
+                
+                // 0 to go back
+                view.displayMessage("0. Go Back to Main Menu");
                 view.displayMessage("--------------------------------");
                 
-                // Loops till valid choice is picked 
-                int courseChoice = 0;
-                while (courseChoice < 1 || courseChoice > availableCourses.size()) 
+               
+                int courseChoice = -1; 
+                
+                // Loop goes till the user inputs valid option
+                while (courseChoice < 0 || courseChoice > availableCourses.size()) 
                 {
-                    courseChoice = getValidInt("Enter the number of the course to add: ");
-                    if (courseChoice < 1 || courseChoice > availableCourses.size()) 
+                    courseChoice = getValidInt("Enter course number to add (or 0 to cancel): ");
+                    if (courseChoice < 0 || courseChoice > availableCourses.size()) 
                     {
-                        view.displayMessage
-                        ("Invalid choice. Please select a valid number from the list.");
+                        view.displayMessage("Invalid choice. Select a valid number or 0 to go back.");
                     }
                 }
                 
-                // Get the name of the course (subtract 1 for the real index)
-                String courseToAdd = availableCourses.get(courseChoice - 1).getCourseName();
+                // If the user chooses 0 instantly go back
+                if (courseChoice == 0) {
+                    break; 
+                }
                 
-                // Passed to add class where it uses that name to add the class
+                // if not 0 then it adds class 
+                String courseToAdd = availableCourses.get(courseChoice - 1).getCourseName();
                 executeAddClass(courseToAdd);
                 break;
             case "C": //Removing a course 
                 view.displayMessage("--- Your Enrolled Courses ---");
                 
-                // List of courses, helper method used here 
+                // List of user courses
                 List<Course> enrolledCourses = getEnrolledCourses();
                 
-                //checks if the user does not have any classes added yet
+                // If they dont have any just go back to main menu
                 if (enrolledCourses.isEmpty()) 
                 {
                     view.displayMessage("You are not currently enrolled in any classes to drop.");
                     break; 
                 }
                 
-                // Print the numbered list (same i + 1 logic from choice B)
+                // List them out
                 for (int i = 0; i < enrolledCourses.size(); i++) 
                 {
                     view.displayMessage((i + 1) + ". " + enrolledCourses.get(i).getCourseName());
                 }
+                
+                // 0 to go back
+                view.displayMessage("0. Go Back to Main Menu");
                 view.displayMessage("-----------------------------");
                 
-                //Loops until valid number is picked 
-                int dropChoice = 0;
-                while (dropChoice < 1 || dropChoice > enrolledCourses.size()) 
+               
+                int dropChoice = -1;
+                
+                // Loops till user picks a valid number 
+                while (dropChoice < 0 || dropChoice > enrolledCourses.size()) 
                 {
-                    dropChoice = getValidInt("Enter the number of the course to drop: ");
-                    if (dropChoice < 1 || dropChoice > enrolledCourses.size()) 
+                    dropChoice = getValidInt("Enter the number of the course to drop (or 0 to cancel): ");
+                    if (dropChoice < 0 || dropChoice > enrolledCourses.size()) 
                     {
-                        view.displayMessage("Invalid choice. Please select a valid number from the list.");
+                        view.displayMessage("Invalid choice. Select a valid number or 0 to go back.");
                     }
                 }
                 
-                // Retrieve the string name and execute the drop
-                String courseToRemove = 
-                    enrolledCourses.get(dropChoice - 1).getCourseName();
+                // If 0 just go back instantly 
+                if (dropChoice == 0) {
+                    break; 
+                }
+                
+                // If not 0, remove it 
+                String courseToRemove = enrolledCourses.get(dropChoice - 1).getCourseName();
                 executeRemoveClass(courseToRemove); 
                 break;
             case "D": //Logging out
