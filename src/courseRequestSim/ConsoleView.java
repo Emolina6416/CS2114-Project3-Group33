@@ -1,6 +1,5 @@
 package courseRequestSim;
 
-import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -20,26 +19,6 @@ public class ConsoleView {
         System.out.println("D - Log Out");
     }
 
-    // Catalog submenu, where Add Class lives (option B from the main menu)
-    public void showCatalogMenu() {
-        System.out.println("\n--- Course Catalog ---");
-        System.out.println("A - Add Class");
-        System.out.println("B - Back to Main Menu");
-    }
-
-    // Prints a titled list of strings (catalog courses, schedule, etc.)
-    // Controller builds the strings, e.g. "Intro to CS (3 cr) - 7/10 seats"
-    public void displayList(String title, List<String> items) {
-        System.out.println("\n--- " + title + " ---");
-        if (items.isEmpty()) {
-            System.out.println("(none)");
-            return;
-        }
-        for (String item : items) {
-            System.out.println(item);
-        }
-    }
-
     // Prints a system message like "Class Added!" or "Course not found"
     public void displayMessage(String msg) {
         System.out.println(msg);
@@ -54,17 +33,6 @@ public class ConsoleView {
     // Same as getUserInput (name used in the UML diagram)
     public String getStringInput(String prompt) {
         return getUserInput(prompt);
-    }
-
-    // Keeps asking until the user types a whole number (range checks stay in the controller)
-    public int getIntInput(String prompt) {
-        while (true) {
-            try {
-                return Integer.parseInt(getUserInput(prompt));
-            } catch (NumberFormatException e) {
-                displayMessage("Please enter a whole number.");
-            }
-        }
     }
 
     public void close() {
