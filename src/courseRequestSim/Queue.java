@@ -55,7 +55,12 @@ public class Queue
     }
 
     public Student peek(){
-        return isEmpty() ? null : head.student;
+        if (isEmpty()){
+            return null;
+        }
+        else{
+            return head.student;
+        }
     }
 
     public boolean contains(Student student){
