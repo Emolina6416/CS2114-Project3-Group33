@@ -4,13 +4,21 @@
 
 A Model-View-Controller Java Console application for student course registration and queue based waitlist.
 
-## Project Design and Architecture: 
+# Project Design and Architecture: 
 
 Model: Features a First-In, First-Out (FIFO) Queue structure that backs the 'Course' waitlist logic alongside other parts such as the 'CourseCatalog' and 'Student'.
 
 View: 'ConsoleView' serves as the presentational layer, displaying output and reading user input. 
 
 Controller: 'RegistrationController' is where bad input is handled, the state is managed, course queue interaction is managed, and the menu flow navigation is defined. This is the logic that controls the whole system
+
+# How to run
+
+### Via IDE (Eclipse / VSCode / etc.)
+* Open the project in your IDE
+* Locate and open 'src/Main.java'
+* Right-click 'Main.java' -> select Run as -> select Java Application
+* Follow console prompts to log in, view catalog options, add/drop courses, and exit
 
 # Reflection
 
