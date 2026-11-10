@@ -72,7 +72,7 @@ Controller: Emerson
 | CourseCatalog | Andrew: Drafted and Revised | --- |
 | Queue | Andrew: Drafted and Revised | --- |
 | Student | Andrew: Drafted and Revised | --- |
-| Test | Andrew: Drafted and revised | --- |
+| QueueTest | Andrew: Drafted and revised | --- |
 | RegistrationController | Emerson: Drafted, revised, and reviewed with AI | AI used in checking over work, feedback, and additions that were checked before use |
 | Main | Emerson: Drafted, and revised | No GenAI used in this section |
 
