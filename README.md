@@ -40,7 +40,8 @@ What happened to your unknowns? Of the things you listed in your scope as not kn
 
 What doesn't work yet? MVP features, bad-input cases, or tests that are missing or failing.
 
-* The basic MVP features work for students; the part of the MVP that does not work yet is the administrator portal to view specific queue information. Tests that are still missing involve some logical tests for RegistrationController and smaller tests for classes in the Model. 
+* The basic MVP features work for students; the part of the MVP that does not work yet is the administrator portal to view specific queue information. Tests that are still missing involve some logical tests for RegistrationController and smaller tests for classes in the Model.
+* The numbering of class size for every class being displayed in the menu is still missing. 
 
 # Next Steps
 
