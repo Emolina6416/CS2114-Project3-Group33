@@ -76,7 +76,7 @@ Controller: Emerson
 
 | Section | Member Work | GenAI note |   
 | :--- | :--- | :--- |
-| ConsoleView | Suhana: Drafted and Revised | --- |
+| ConsoleView | Suhana: Drafted and Revised | No GenAI used in this section |
 | Course | Andrew: Drafted and Revised | Used GenAI to draft and revise |
 | CourseCatalog | Andrew: Drafted and Revised | Used GenAI to draft and revise |
 | Queue | Andrew: Drafted and Revised | Used GenAI to draft and revise |
