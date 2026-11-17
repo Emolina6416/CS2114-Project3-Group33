@@ -53,8 +53,8 @@ public class RegistrationController
                 String choice = getValidString("Select an option: ").toUpperCase();
                 processMenuOptions(choice); 
             }
-            view.displayMessage("Exiting the Registration System. Goodbye!");
         }
+        view.displayMessage("Exiting the Registration System. Goodbye!");
     }
     
     /**
@@ -319,7 +319,7 @@ public class RegistrationController
     {
         for (int yr = 1; yr <= 4; yr++) 
         {
-            view.displayMessage("\n--- Year " + yr + " Courses ---");
+            view.displayMessage("--- Year " + yr + " Courses ---");
             for (Course c : catalog.getCoursesByYear(yr)) 
             {
                 view.displayMessage("  " + c.getCourseName() + " | Queue Size: " + c.getEnrollment() + "/10");
@@ -342,7 +342,7 @@ public class RegistrationController
         else 
         {
             List<Student> line = target.getQueueStudents();
-            view.displayMessage("\n--- Queue for " + target.getCourseName() + " (" + line.size() + "/10) ---");
+            view.displayMessage("--- Queue for " + target.getCourseName() + " (" + line.size() + "/10) ---");
             if (line.isEmpty()) 
             {
                 view.displayMessage("Queue is currently empty.");
@@ -486,7 +486,7 @@ public class RegistrationController
         }
         
         view.displayMessage("Total Credits: " + currentUser.getCurrentCredits() + "/15");
-        view.displayMessage("-----------------------------\n");
+        view.displayMessage("-----------------------------");
     }
     
     /**
