@@ -85,7 +85,7 @@ Controller: Emerson
 | CourseCatalog | Andrew: Drafted and Revised | Used GenAI to draft and revise |
 | Queue | Andrew: Drafted and Revised | Used GenAI to draft and revise |
 | Student | Andrew: Drafted and Revised | Used GenAI to draft and revise |
-| QueueTest | Andrew: Drafted and revised | Used GenAI to draft and revise |
+| Tests | Andrew: Drafted and revised | Used GenAI to draft and revise |
 | RegistrationController | Emerson: Drafted, revised, and reviewed with AI | AI used in checking over work, feedback, and additions that were checked before use |
 | Main | Emerson: Drafted, and revised | No GenAI used in this section |
 
