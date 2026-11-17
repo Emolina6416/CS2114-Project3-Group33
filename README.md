@@ -22,50 +22,54 @@ Controller: 'RegistrationController' is where bad input is handled, the state is
 
 # Reflection
 
-What changed from your specification? Classes, method signatures, where validation lives, test cases — what did the spec say, what did you build instead, and why?
+How did your design absorb the change? List the classes your feature actually touched. Compare that with the prediction in your D3 Next Steps: what matched, what surprised you?
 
-* Some changes that were made from the specification to this prototype is a helper method in RegistrationController. The method is called List<Course> getEnrolledCourses; this made it easier to get the classes the user was currently enrolled in without looping every time they were needed. It allowed for a cleaner implementation. This change came from observations in the coding process where some methods looked long and messy.
-  
-* Node became an inner class of Queue because it only needed to be implemented with linked list. Removed parameters from addCredits() and removeCredits() since every class is worth 3 credits. Added Queue.contains(student) and Course.isEnrolled(Student) to check enrollment by student ID. Shortened field names (currentCredits, classYear, and studentData) for efficiency. Test cases for Queue remained consistent.
-  
-* Another change made was the addition of a Main class. This method could have been added in RegistrationController, but it was much cleaner to create a separate class and add the main method there to actually run our system.
+* The force add feature had its own class created in Course called forceAddStudent; this change affected executeAddClass and, in turn, changed how the menu option B worked in processMenuOptions in the RegistrationController class. The predictions made in the Next Steps section in the last submission were accurate and hit the different parts of the new feature. 
 
-Did the model really stand alone? Was there anything you had to move across the model/view line to make it run, or anything in the model that still knows about the view?
+Did the change cross the model/view line? Did the view have to learn anything new about the model? If a change rippled through layers it shouldn't have, where and why?
 
-* Yes, the model does not reference ConsoleView or use input/output. The model only returns values or throws exceptions, and the controller then decides what will be displayed by the view. There was nothing that needed to be moved across the model/view line in order to make our system run. The model and view don't know of each other's existence. Only the controller knows of the Model and View. The model and view are separate parts of the system, with the controller connecting the logic together. 
+* Since there needed to be a method defined in model it affected that section of the code but beyond that everything was defined in the controller. No changes rippled through the layers there was one small change in model but besides that it was all in controller. Nothing was added to the view. 
 
-What happened to your unknowns? Of the things you listed in your scope as not knowing how to do, which did you figure out, and which are still open?
+What changed from your D3 plan? Features, signatures, validation, or tests that differ from what you said you'd do, and why.
 
-* So far, what we have figured out with our unknowns is how we will organize the menu and how to randomly generate the number of students for all courses. The last unknown that will be addressed in the upcoming Prototype 2 is how the information will be displayed to admins when viewing information. 
+* The admin menu was added from the D3 plan. This includes getters for students in the Queue class and Course class that help get specific information from the queue lines. These methods are simply called public List<Student> getStudentsInOrder() and public List<Student> getQueueStudents(). This gets information from the classes.
+* Handle login was also overhauled. Further testing led to observations on student login mix ups our program did not take in to account a student logging off and then another going on and using the same ID. This same ID led to that 2nd student being seen as the first student and any actions performed in addition of classes could lead to the program sending a "Already in class option". This was eased by redoing the handleLogin method to authenticate students. A studentProcessed() private field was added at the top and an array of these students was initialized in order to track the students. Private helper methods such as private Student authenticateStudent(String name), private Student findStudentById(int id), and private int promptForClassYear() were used to help this process.
+* Specifics were added to the executeAddClass() method, before it was general error messaged of "full class or exceeds credits" now it specifies which one it is.
+* Changes to how the B option is presented in processMenuOptions were made. The classes now display the number of students in the class
+
+What could make the next feature cheaper? 
+
+* Adding a semester field to the course class could make the next feature cheaper, as this would help track every semester instead of tracking a flat allCourses list. Attempting to add this feature now with Fall, Winter, Spring, and Summer could cause changes to ripple throughout the application which is expensive. 
 
 What doesn't work yet? MVP features, bad-input cases, or tests that are missing or failing.
 
-* The basic MVP features work for students; the part of the MVP that does not work yet is the administrator portal to view specific queue information. Tests that are still missing involve some logical tests for RegistrationController and smaller tests for classes in the Model.
-* The numbering of class size for every class being displayed in the menu is still missing. 
+* All MVP features were added, the change feature "forceAdd" was successfully implemented with a 30% acceptance and 70% denial rate. Something that we could still add could be a more visually appealing menu for people being processed. Some tests for controller are still missing. 
+
 
 # Next Steps
 
-What is left to finish the MVP? The remaining features and fixes, in the order you will do them.
+What is left for the final build? Remaining features and fixes, in order.
 
-* The only part of the MVP that is missing is the administrator portal which is the first thing that will be done. This includes an additional input that the login screen can take, a separate admin menu, and possible commands that they will need to do.
-* Some additional changes that could be made is some cleaner splitting of the RegistrationController, like the processMenuOptions, because it's a little messy at the moment. 
+* First thing that can be done is a last revision of the code, any simplifications made or helper methods added should be changed then
+* Second thing would be a more visually appealing menu display for the application. It is boring right now and should have more visuals as described in the scope
+* Third is the final test implementations 
 
-Your change feature. Deliverable 4 requires you to add one non-trivial feature that was not in your MVP. Name it, then predict which classes it will touch (model, view, controller) and which ones your design says should not need to change. You will compare this prediction to what actually happened.
+Which stretch goals are you committing to, and which are you dropping?
 
-* The change feature that is not in our MVP is a force add option for the students. This feature would be a way for the students to bypass the queue line and simply add the class they need to add to their schedule.
-* This force add option will touch the model and controller. The Controller will handle when the force add option is triggered in the processMenuOptions(), and the Model will define the force add option as a method forceAdd(). This addition should not touch or change the View. 
+* The force add on is something that we have committed to and something that has thus far been successfully implemented. The future scheduling is a stretch goal that we are dropping as the complexity of adding this feature would have us overhauling some already implemented code and data storage. 
 
-Which stretch goals will you attempt? The ones from your scope you are committing to, and the ones you are dropping.
+What will your 3-minute demo show? The path you'll walk through, including the new feature.
 
-* The stretch goal that we are committing to is the stretch goal. We will not drop the future scheduling stretch goal yet as we will try to attempt it in these upcoming deliverables but if it becomes too messy we might need to end up dropping it. 
+* The 3-minute demo will first demonstrate the login feature by creating a student name, ID, and class year with bad inputs shown as it continues. The person doing the demo will then go through adding classes, dropping classes, viewing the schedule, and forceAdd.
+* After this part, the Demo will transition to logging out and logging in using a different person; this is where the duplicate ID bad input can be shown.
+* After this, the person doing the demo can continue to add classes using this user before logging out once again and logging back in with the first person to demonstrate the program remembering the first user; a "Welcome Back" Message should be displayed then.
+* The last part of the demo should include once again logging out of this student account and going into the admin menu where the person demoing can go in to the different admin options demonstrating the data that can be seen through this menu.
 
-What new tests will you need? The methods and bad-input cases the added work must cover.
 Who does what? Which team member owns each remaining item.
 
-* We are making the forceAdd option a randomized variable so if a student triggers it, it should randomly accept or deny their request. We need to test it to make sure that when it triggers, it accepts/denies the student as we expect it to.
-* Team Member: Andrew - In charge of additional tests, and forceAdd feature 
-* Team Member: Emerson - In charge of helping with tests, additional menu options for forceAdd and admin portal features (such as making a secret key for the login that triggers the admin menu)
-* Team Member: Suhana - In charge of helping with tests and additional menu design for the admin portal
+* Emerson: Menu revisions to be more visually appealing
+* Suhana: Additional testing, Menu feedback
+* Andrew: Additional testing, final model walk through 
 
 
 # Attribution and GenAI note 
