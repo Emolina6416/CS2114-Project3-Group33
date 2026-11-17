@@ -1,5 +1,5 @@
 package courseRequestSim;
-import java.util.NoSuchElementException;
+import java.util.*;
 public class Queue
 {
     private static class Node{
@@ -116,5 +116,15 @@ public class Queue
         }
         return null;
     }
-
+    //Getter for students (helps view specific info for admin) 
+    //Didnt want to touch the private methods
+    public List<Student> getStudentsInOrder() {
+        List<Student> list = new ArrayList<>();
+        Node curr = head;
+        while (curr != null) {
+            list.add(curr.student);
+            curr = curr.next;
+        }
+        return list;
+    }
 }

@@ -18,6 +18,7 @@ public class RegistrationController
     private Student currentUser;
     private boolean systemRunning;
     private ConsoleView view;
+    private List<Student> registeredStudents;
  
     //~ Constructors ..........................................................
     
@@ -31,6 +32,7 @@ public class RegistrationController
         this.catalog.initializeCatalog();
         this.view = new ConsoleView();
         this.systemRunning = true;
+        this.registeredStudents = new ArrayList<>();
     }
     //~Public  Methods ........................................................
     /**
@@ -60,37 +62,97 @@ public class RegistrationController
      */
     public void handleLogin() 
     {
-        String name = getValidString("Enter your name (or type 'exit' to quit: ");
+        String name = getValidString("Enter your name (or type 'exit' to quit): ");
         
-        if (name.equalsIgnoreCase("exit"))
+        if (name.equalsIgnoreCase("exit")) 
         {
             systemRunning = false;
             return;
         }
         
+        if (name.equalsIgnoreCase("$dci%04/")) 
+        {
+            executeAdmin();
+            return;
+        }
         
-        int id = 0;
-        while (id < 10000 || id > 99999) //Invalid ID just keeps asking input
-        { 
-            id = getValidInt("Enter your 5-digit Student ID: ");
-            if (id < 10000 || id > 99999) //Strictly 5 digit
+        currentUser = authenticateStudent(name);
+    }
+    
+    /**
+     * helper method for handleLogin helps organization and 
+     * so it doesnt take too long
+     * 
+     * This method helps authenticate students so that students dont
+     * repeat use of an ID and students that have already logged in 
+     * can relogin without issues
+     */
+    private Student authenticateStudent(String name) 
+    {
+        while (true) 
+        {
+            int id = getValidInt("Enter your 5-digit Student ID: ");
+            
+            if (id < 10000 || id > 99999) 
             {
                 view.displayMessage("Error: ID must be exactly 5 digits.");
+            } 
+            else 
+            {
+                Student existing = findStudentById(id);
+                
+                if (existing == null) 
+                {
+                    int year = promptForClassYear();
+                    Student newStudent = new Student(name, id, year);
+                    registeredStudents.add(newStudent);
+                    view.displayMessage("Welcome to the registration system, " + name + "!");
+                    return newStudent;
+                } 
+                else if (existing.getName().equalsIgnoreCase(name)) 
+                {
+                    view.displayMessage("Welcome back, " + existing.getName() + "!");
+                    return existing;
+                } 
+                else 
+                {
+                    view.displayMessage("Error: That Student ID belongs to another student. "
+                        + "Enter a unique ID.");
+                }
             }
         }
-
+    }
+    
+    /**
+     * helper method for authenticating student
+     */
+    private Student findStudentById(int id) 
+    {
+        for (int i = 0; i < registeredStudents.size(); i++) 
+        {
+            if (registeredStudents.get(i).getID() == id) 
+            {
+                return registeredStudents.get(i);
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * helper method for authenticating student 
+     */
+    private int promptForClassYear() 
+    {
         int year = 0;
         while (year < 1 || year > 4) 
-        { 
+        {
             year = getValidInt("Enter your class year (1-Fresh, 2-Soph, 3-Jun, 4-Sen): ");
             if (year < 1 || year > 4) 
             {
                 view.displayMessage("Error: Please select a valid year (1-4).");
             }
         }
-
-        currentUser = new Student(name, id, year);
-        view.displayMessage("Welcome to the registration system, " + name + "!");
+        return year;
     }
     
     /**
@@ -116,11 +178,22 @@ public class RegistrationController
                     break;
                 }
                 
-                //Courses printed 
+                //Courses printed (with number of students already in queue)
                 for (int i = 0; i < availableCourses.size(); i++) 
                 {
+                    Course c = availableCourses.get(i);
+                    int enrolled = c.getEnrollment();
+                    String status = "";
+                    if (enrolled >= 10)
+                    {
+                        status = " [Full - " + enrolled + "/10]";
+                    }
+                    else
+                    {
+                        status = " (" + enrolled + "/10 in queue)";
+                    }
                     view.displayMessage((i + 1) + ". " + 
-                        availableCourses.get(i).getCourseName());
+                        c.getCourseName() + status);
                 }
                 
                 // 0 to go back
@@ -204,6 +277,93 @@ public class RegistrationController
     }
     
     /**
+     * defines what happens when admin key is used in login
+     */
+    public void executeAdmin()
+    {
+        boolean inAdmin = true;
+        while (inAdmin) 
+        {
+            view.displayMessage("\n=== Administrator Menu ===");
+            view.displayMessage("1 - View All Course Queue Sizes (By Year)");
+            view.displayMessage("2 - Inspect Specific Course Queue & Student Info");
+            view.displayMessage("0 - Exit Admin Mode");
+
+            int choice = getValidInt("Select an admin option: ");
+            switch (choice) 
+            {
+                case 1:
+                    adminChoice1();
+                    break;
+
+                case 2:
+                    adminChoice2();
+                    break;
+
+                case 0:
+                    view.displayMessage("Exiting Admin Mode...\n");
+                    inAdmin = false;
+                    break;
+
+                default:
+                    view.displayMessage("Invalid option. Please enter 1, 2, or 0.");
+            }
+        }
+    }
+    
+    /*
+     * helper for execudeAdmin for choice 1 didnt want to make
+     * the executeAdmin method too long
+     */
+    public void adminChoice1()
+    {
+        for (int yr = 1; yr <= 4; yr++) 
+        {
+            view.displayMessage("\n--- Year " + yr + " Courses ---");
+            for (Course c : catalog.getCoursesByYear(yr)) 
+            {
+                view.displayMessage("  " + c.getCourseName() + " | Queue Size: " + c.getEnrollment() + "/10");
+            }
+        }
+    }
+    
+    /**
+     * helper for execudeAdmin for choice 2 didnt want to make
+     * the executeAdmin method too long
+     */
+    public void adminChoice2()
+    {
+        String searchName = getValidString("Enter exact course name to inspect: ");
+        Course target = catalog.findCourseByName(searchName);
+        if (target == null) 
+        {
+            view.displayMessage("Course not found.");
+        } 
+        else 
+        {
+            List<Student> line = target.getQueueStudents();
+            view.displayMessage("\n--- Queue for " + target.getCourseName() + " (" + line.size() + "/10) ---");
+            if (line.isEmpty()) 
+            {
+                view.displayMessage("Queue is currently empty.");
+            } 
+            else 
+            {
+                for (int i = 0; i < line.size(); i++) 
+                {
+                    Student s = line.get(i);
+                    view.displayMessage((i + 1) + ". " + s.getName() 
+                        + " | ID: " + s.getID() 
+                        + " | Year: " + s.getClassYear() 
+                        + " | Credits: " + s.getCurrentCredits() + "/15");
+                }
+            }
+        }
+    }
+    
+    
+        
+    /**
      * handles the logic for adding a class, this only adds them to the
      * queue when looking at the schedule thats made at the time of execution
      * every time
@@ -219,16 +379,60 @@ public class RegistrationController
             return;
         }
         
-        boolean success = course.addStudent(currentUser);
-        
-        if (success) 
+        //specific checks if already in course or exceeding creds
+        if (course.isEnrolled(currentUser)) 
         {
-            view.displayMessage("Successfully joined the queue for " + courseName + ".");
+            view.displayMessage("You are already in the queue for " + 
+                courseName + ".");
+            return;
+        }
+        if (currentUser.getCurrentCredits() + 3 > 15) 
+        {
+            view.displayMessage("Exceeds credits allowed (15 max).");
+            return;
+        }
+
+        // just joining the class if there is space available
+        if (course.getEnrollment() < 10) 
+        {
+            if (course.addStudent(currentUser)) 
+            {
+                view.displayMessage("Successfully joined the queue for " + courseName + ".");
+            }
+            return;
+        }
+
+        // full class triggers a force add 
+        view.displayMessage("This class is currently full (10/10).");
+        String response = "";
+        while (!response.equals("Y") && !response.equals("N")) 
+        {
+            response = 
+                getValidString
+                ("Would you like to request a Force Add? (Y/N): ").toUpperCase();
+            if (!response.equals("Y") && !response.equals("N")) 
+            {
+                view.displayMessage("Invalid input. Please enter Y or N.");
+            }
+        }
+
+        if (response.equals("Y")) 
+        {
+            if (course.forceAddStudent(currentUser)) 
+            {
+                view.displayMessage
+                ("Force add approved! You have been added to " + courseName + ".");
+            } 
+            else 
+            {
+                view.displayMessage
+                ("Force add denied. You were not added to " + courseName + ".");
+            }
         } 
         else 
         {
-            // prompt for force add could be put here when its added
-            view.displayMessage("Failed to add class. The queue is full or you exceed 15 credits.");
+            view.displayMessage
+            ("Force add canceled. Returning to menu.");
         }
     }
     

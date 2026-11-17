@@ -1,4 +1,7 @@
 package courseRequestSim;
+
+import java.util.List;
+
 public class Course
 {
     //~ Fields ................................................................
@@ -75,6 +78,11 @@ public class Course
         }
         return false;
 
+    }
+    
+    //helper for getting students for admin menu
+    public List<Student> getQueueStudents() {
+        return classLine.getStudentsInOrder();
     }
 }
 
