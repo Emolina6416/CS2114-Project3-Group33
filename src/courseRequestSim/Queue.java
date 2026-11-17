@@ -117,7 +117,6 @@ public class Queue
         return null;
     }
     //Getter for students (helps view specific info for admin) 
-    //Didnt want to touch the private methods
     public List<Student> getStudentsInOrder() {
         List<Student> list = new ArrayList<>();
         Node curr = head;
